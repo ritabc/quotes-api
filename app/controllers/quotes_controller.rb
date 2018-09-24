@@ -1,6 +1,8 @@
 class QuotesController < ApplicationController
   def index
-    @quotes = {"quotation": "The secret of getting ahead is getting started"}
+    name = params[:name]
+    byebug
+    @quotes = Quote.search_by_author(name)
     json_response(@quotes)
   end
 
@@ -11,17 +13,25 @@ class QuotesController < ApplicationController
 
   def create
     @quote = Quote.create!(quote_params)
-    json_response(@quote)
+    json_response(@quote, :created)
   end
 
   def update
     @quote = Quote.find(params[:id])
-    @quote.update!(quote_params)
+    if @quote.update!(quote_params)
+      render status: 200, json: {
+        message: "Your Quote has been updated successfully"
+      }
+    end
   end
 
   def destroy
     @quote = Quote.find(params[:id])
-    @quote.destroy
+    if @quote.destroy!
+      render status: 200, json: {
+        message: "Your Quote has been destroyed successfully"
+      }
+    end
   end
 
   private
