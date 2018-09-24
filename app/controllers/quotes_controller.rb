@@ -1,7 +1,6 @@
 class QuotesController < ApplicationController
   def index
     name = params[:name]
-    byebug
     @quotes = Quote.search_by_author(name)
     json_response(@quotes)
   end
